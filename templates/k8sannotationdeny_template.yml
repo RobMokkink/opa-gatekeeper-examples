@@ -1,0 +1,34 @@
+apiVersion: templates.gatekeeper.sh/v1beta1
+kind: ConstraintTemplate
+metadata:
+  name: k8sannotationdeny
+spec:
+  crd:
+    spec:
+      names:
+        kind: K8sAnnotationDeny
+      validation:
+        # Schema for the `parameters` field
+        openAPIV3Schema:
+          properties:
+            annotations:
+              type: array
+              items:
+                type: object
+                properties:
+                  key:
+                    type: string
+                  value:
+                    type: string
+  targets:
+    - target: admission.k8s.gatekeeper.sh
+      rego: |
+        package k8sannotationdeny
+
+        violation[{"msg": msg}] {
+          value := input.review.object.metadata.annotations[key]
+          denyval := input.parameters.annotations[_]
+          denyval.key == key
+          value == denyval.value
+          msg := sprintf("Annotation <%v: %v> is not allowed!", [key, value])
+        }

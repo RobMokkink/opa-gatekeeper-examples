@@ -1,0 +1,14 @@
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sAnnotationDeny
+metadata:
+  name: no-empty-nodeselector
+spec:
+  match:
+    kinds:
+      - apiGroups: [""]
+        kinds: ["Namespace"]
+  parameters:
+    annotations:
+      - key: "scheduler.alpha.kubernetes.io/node-selector"
+        value: ''
+
