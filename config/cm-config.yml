@@ -1,0 +1,16 @@
+apiVersion: config.gatekeeper.sh/v1alpha1
+kind: Config
+metadata:
+  name: config
+  namespace: "gatekeeper-system"
+spec:
+  match:
+  - excludedNamespaces:
+    - "default"
+    - "gatekeeper-system"
+    - "ingress-nginx"
+    - "kube-node-lease"
+    - "kube-public"
+    - "kube-system"
+    - "nginx-ingress"
+    processes: ["*"]
